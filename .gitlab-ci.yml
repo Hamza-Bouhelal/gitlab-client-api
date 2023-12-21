@@ -1,0 +1,34 @@
+image: node:18.17.1
+
+stages:
+  - build
+  - lint
+  - publish
+
+dependencies:
+  stage: build
+  script:
+    - yarn
+    - yarn build
+  artifacts:
+    paths:
+      - node_modules/
+      - dist/
+    expire_in: 1 week
+
+lint:
+  stage: lint
+  script:
+    - yarn lint
+
+publish:
+  stage: publish
+  before_script:
+    - git config --global user.email "RELEASE_BOT@gitlab.com"
+    - git config --global user.name "Release Bot"
+  script:
+    - yarn release "$CI_COMMIT_MESSAGE"
+  only:
+    - master
+  except:
+    - /^no-release.*$/

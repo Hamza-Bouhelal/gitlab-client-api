@@ -1,0 +1,27 @@
+{
+  "name": "gitlab-client-api",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "repository": "gitlab:bouhelalhamza/gitlab-client-api",
+  "license": "MIT",
+  "scripts": {
+    "start": "ts-node ./src/index.ts",
+    "build": "yarn tsc",
+    "lint": "eslint . --ext .ts",
+    "release": "ts-node ./scripts/release.ts"
+  },
+  "dependencies": {
+    "@types/node": "^20.10.5",
+    "axios": "^1.6.2",
+    "lodash": "^4.17.21",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.202",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "eslint": "^8.56.0"
+  }
+}
