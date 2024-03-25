@@ -29,7 +29,7 @@ yarn add gitlab-client-api
 
 ## Diagram
 
-![api-diagram](./api-diagram/src_diagram.png)
+![api-diagram](https://i.ibb.co/qsDb1Yw/src-diagram.png)
 
 ## Usage
 
@@ -189,6 +189,8 @@ const commitPipelines = await projectCommits[0].findPipelines();
 
 ```typescript
 const jobs = await pipeline.findJobs();
+
+await jobs[0].downloadArtifacts("./path/to/download/file.zip");
 ```
 
 ## License

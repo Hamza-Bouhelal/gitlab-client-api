@@ -26,6 +26,9 @@ export class Pipeline extends GitlabApiClientBase {
       expectedStatusCode: 200,
       params: super.getSearchParams(searchOptions),
     });
-    return data.map((jobInfo: JobInfo) => new Job(jobInfo, this.options));
+    return data.map(
+      (jobInfo: JobInfo) =>
+        new Job(jobInfo, this.options, this.pipelineInfo.project_id)
+    );
   }
 }
