@@ -1,4 +1,4 @@
-import { GitlabOptions, UserInfo } from "../Gitlab";
+import { GitlabOptions } from "../Gitlab";
 import { CachedRequests, Methods, RequestArgs, Response } from ".";
 import axios from "axios";
 import { SearchOptions } from "../utils/types";
@@ -8,6 +8,7 @@ import {
   removeKey,
 } from "../utils/options";
 import _ from "lodash";
+import { User } from "../User/user";
 
 const axiosMethods = {
   GET: axios.get,
@@ -23,6 +24,14 @@ export class GitlabApiClientBase {
   constructor(protected options: Required<GitlabOptions>) {
     this.options = options;
   }
+
+  protected resetCacheInternal() {
+    if (!this.options.cache) return;
+    while (cachedRequests.length) {
+      cachedRequests.pop();
+    }
+  }
+
   async CallGitlabApi(options: RequestArgs): Promise<Response> {
     if (this.options.cache) {
       for (const cachedRequest of cachedRequests) {
@@ -88,22 +97,19 @@ export class GitlabApiClientBase {
     return customResponse;
   }
 
-  async getUserInfo(): Promise<UserInfo> {
+  async getUser(): Promise<User> {
     const { data } = await this.CallGitlabApi({
       endpoint: "/user",
       method: Methods.GET,
       expectedStatusCode: 200,
     });
-    return data;
+    return new User(data, this);
   }
 
   protected getSearchParams(searchOptions: SearchOptions) {
     return {
       ...removeUndefinedKeys(removeKey(searchOptions, "asUser")),
-      ...addUserSearchParams(
-        !!searchOptions.asUser,
-        this.getUserInfo.bind(this)
-      ),
+      ...addUserSearchParams(!!searchOptions.asUser, this.getUser.bind(this)),
     };
   }
 }

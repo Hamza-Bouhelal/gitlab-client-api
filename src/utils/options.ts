@@ -1,5 +1,5 @@
 /* eslint @typescript-eslint/no-explicit-any : 0 */
-import { UserInfo } from "../Gitlab";
+import { User } from "../User/user";
 
 export function getOptions<T extends { [key: string]: any }>(
   options: Partial<T>,
@@ -30,14 +30,14 @@ export function removeKey<T extends object, K extends keyof T>(
 
 export function addUserSearchParams(
   isUser: boolean,
-  getUserInfo: () => Promise<UserInfo>
+  getUser: () => Promise<User>
 ) {
   return isUser
     ? {
         membership: true,
         min_access_level: 10,
         owned: true,
-        user_id: getUserInfo().then((userInfo) => userInfo.id),
+        user_id: getUser().then((user) => user.getInfo().id),
       }
     : {};
 }

@@ -1,4 +1,4 @@
-import { BranchInfo } from ".";
+import { BranchInfo, PipelineSearchOptions } from ".";
 import { CommitInfo } from "../Commit";
 import { Commit } from "../Commit/commit";
 import { Methods } from "../GitlabApiClientBase";
@@ -64,7 +64,9 @@ export class Branch extends GitlabApiClientBase {
     );
   }
 
-  async findPipelines(searchOptions: SearchOptions = {}): Promise<Pipeline[]> {
+  async findPipelines(
+    searchOptions?: PipelineSearchOptions
+  ): Promise<Pipeline[]> {
     const { data } = await this.CallGitlabApi({
       endpoint: `/projects/${this.projectId}/pipelines`,
       method: Methods.GET,

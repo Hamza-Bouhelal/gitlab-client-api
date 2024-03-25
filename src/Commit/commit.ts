@@ -5,6 +5,7 @@ import { PipelineInfo } from "../Pipeline";
 import { Pipeline } from "../Pipeline/pipeline";
 import { GitlabOptions } from "../Gitlab";
 import { SearchOptions } from "../utils/types";
+import { PipelineSearchOptions } from "../Branch";
 
 export class Commit extends GitlabApiClientBase {
   constructor(
@@ -19,7 +20,9 @@ export class Commit extends GitlabApiClientBase {
     return this.commitInfo;
   }
 
-  async findPipelines(searchOptions: SearchOptions = {}): Promise<Pipeline[]> {
+  async findPipelines(
+    searchOptions: PipelineSearchOptions = {}
+  ): Promise<Pipeline[]> {
     const { data } = await this.CallGitlabApi({
       endpoint: `/projects/${this.getInfo().id}/repository/commits/${
         this.commitInfo.short_id
