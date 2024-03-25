@@ -4,7 +4,6 @@ import { GitlabApiClientBase } from "../GitlabApiClientBase/gitlabApiClientBase"
 import { PipelineInfo } from "../Pipeline";
 import { Pipeline } from "../Pipeline/pipeline";
 import { GitlabOptions } from "../Gitlab";
-import { SearchOptions } from "../utils/types";
 import { PipelineSearchOptions } from "../Branch";
 
 export class Commit extends GitlabApiClientBase {
