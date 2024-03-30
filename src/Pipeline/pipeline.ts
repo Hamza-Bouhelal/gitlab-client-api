@@ -3,7 +3,6 @@ import { Methods } from "../GitlabApiClientBase";
 import { GitlabApiClientBase } from "../GitlabApiClientBase/gitlabApiClientBase";
 import { Job } from "../Job/job";
 import { GitlabOptions } from "../Gitlab";
-import { SearchOptions } from "../utils/types";
 import { JobInfo, JobSearchOptions } from "../Job";
 
 export class Pipeline extends GitlabApiClientBase {

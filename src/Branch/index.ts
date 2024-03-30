@@ -1,5 +1,3 @@
-import { SearchOptions } from "../utils/types";
-
 /**
  * Represents the options for filtering branches.
  */
@@ -46,7 +44,7 @@ export interface BranchInfo {
 /**
  * Represents the options for querying project pipelines.
  */
-export interface PipelineSearchOptions extends SearchOptions {
+export interface PipelineSearchOptions {
   /**
    * The ID or URL-encoded path of the project.
    */

@@ -17,7 +17,6 @@ import { PipelineInfo } from "../Pipeline";
 import { Pipeline } from "../Pipeline/pipeline";
 import { GitlabOptions } from "../Gitlab";
 import { decodeBase64 } from "../utils/base64";
-import { SearchOptions } from "../utils/types";
 import { IssueInfo, IssueSearchOptions } from "../Issue";
 
 export class Project extends GitlabApiClientBase {

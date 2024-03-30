@@ -2,7 +2,6 @@ import { getOptions } from "../utils/options";
 import { GitlabApiClientBase } from "../GitlabApiClientBase/gitlabApiClientBase";
 import { Methods } from "../GitlabApiClientBase";
 import { Project } from "../Project/project";
-import { SearchOptions } from "../utils/types";
 import {
   GitlabCreateProjectOptions,
   ProjectInfo,

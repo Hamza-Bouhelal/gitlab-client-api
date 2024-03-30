@@ -1,5 +1,4 @@
 /* eslint @typescript-eslint/no-explicit-any : 0 */
-import { User } from "../User/user";
 
 export function getOptions<T extends { [key: string]: any }>(
   options: Partial<T>,

@@ -7,16 +7,7 @@ import { MergeRequest } from "../MergeRequest/mergeRequest";
 import { PipelineInfo } from "../Pipeline";
 import { Pipeline } from "../Pipeline/pipeline";
 import { GitlabOptions } from "../Gitlab";
-import { SearchOptions } from "../utils/types";
-
-interface CustomSearchOptions extends SearchOptions {
-  source_branch?: string;
-  state?: string;
-}
-
-interface CustomBranchSearchOptions extends SearchOptions {
-  ref_name: string;
-}
+import { MergeRequestSearchOptions } from "../MergeRequest";
 
 export class Branch extends GitlabApiClientBase {
   constructor(
@@ -34,7 +25,7 @@ export class Branch extends GitlabApiClientBase {
   }
 
   async getMergeRequest(): Promise<MergeRequest | null> {
-    const customSearchOptions: CustomSearchOptions = {
+    const customSearchOptions: MergeRequestSearchOptions = {
       source_branch: this.branchInfo.name,
       state: "opened",
     };
@@ -74,7 +65,7 @@ export class Branch extends GitlabApiClientBase {
       params: {
         ...searchOptions,
         ref_name: this.branchInfo.name,
-      } as CustomBranchSearchOptions,
+      },
     });
     return data.map(
       (pipelineInfo: PipelineInfo) => new Pipeline(pipelineInfo, this.options)

@@ -2,7 +2,6 @@ import { FileInfo, GitlabCommitInfo } from ".";
 import { Methods } from "../GitlabApiClientBase";
 import { GitlabApiClientBase } from "../GitlabApiClientBase/gitlabApiClientBase";
 import { GitlabOptions } from "../Gitlab";
-import { SearchOptions } from "../utils/types";
 
 export class File extends GitlabApiClientBase {
   constructor(
@@ -28,7 +27,7 @@ export class File extends GitlabApiClientBase {
       expectedStatusCode: 200,
       params: {
         ref: this.ref,
-      } as SearchOptions,
+      },
     });
     return data;
   }

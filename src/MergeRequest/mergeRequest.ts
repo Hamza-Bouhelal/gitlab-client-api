@@ -4,13 +4,8 @@ import { Methods } from "../GitlabApiClientBase";
 import { GitlabApiClientBase } from "../GitlabApiClientBase/gitlabApiClientBase";
 import { Pipeline } from "../Pipeline/pipeline";
 import { GitlabOptions } from "../Gitlab";
-import { SearchOptions } from "../utils/types";
 import { PipelineInfo } from "../Pipeline";
 import { PipelineSearchOptions } from "../Branch";
-
-interface CustomMRSearchOptions extends SearchOptions {
-  ref_name: string;
-}
 
 export class MergeRequest extends GitlabApiClientBase {
   constructor(
@@ -44,7 +39,7 @@ export class MergeRequest extends GitlabApiClientBase {
       params: {
         ...searchOptions,
         ref_name: this.mergeRequestInfo.source_branch,
-      } as CustomMRSearchOptions,
+      },
     });
     return data.map(
       (pipelineInfo: PipelineInfo) => new Pipeline(pipelineInfo, this.options)

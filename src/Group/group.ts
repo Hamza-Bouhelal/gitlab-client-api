@@ -4,7 +4,6 @@ import { GitlabApiClientBase } from "../GitlabApiClientBase/gitlabApiClientBase"
 import { ProjectInfo, ProjectSearchOptions } from "../Project";
 import { Project } from "../Project/project";
 import { GitlabOptions } from "../Gitlab";
-import { SearchOptions } from "../utils/types";
 
 export class Group extends GitlabApiClientBase {
   constructor(private groupInfo: GroupInfo, options: Required<GitlabOptions>) {
