@@ -4,7 +4,6 @@ import { GitlabOptions } from "../Gitlab";
 import { Commit } from "../Commit/commit";
 import { Pipeline } from "../Pipeline/pipeline";
 import { Methods } from "../GitlabApiClientBase";
-import { appendFileSync } from "fs";
 
 type CustomJobInfo = Omit<Omit<JobInfo, "commit">, "pipeline"> & {
   commit: Commit;
