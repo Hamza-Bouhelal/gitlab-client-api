@@ -31,14 +31,14 @@ export class Job extends GitlabApiClientBase {
     return this.jobInfo;
   }
 
-  async downloadArtifacts(filePath: string): Promise<void> {
+  async downloadArtifacts(): Promise<Buffer> {
     const { data } = await this.CallGitlabApi({
-      endpoint: `/projects/${this.jobInfo}/jobs/${this.getInfo().id}/artifacts`,
+      endpoint: `/projects/${this.projectId}/jobs/${
+        this.getInfo().id
+      }/artifacts`,
       method: Methods.GET,
       expectedStatusCode: 200,
     });
-    const blob = new Blob([data]);
-    const buffer = await blob.arrayBuffer();
-    appendFileSync(filePath, Buffer.from(buffer));
+    return data;
   }
 }
