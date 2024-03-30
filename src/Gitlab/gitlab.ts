@@ -3,12 +3,16 @@ import { GitlabApiClientBase } from "../GitlabApiClientBase/gitlabApiClientBase"
 import { Methods } from "../GitlabApiClientBase";
 import { Project } from "../Project/project";
 import { SearchOptions } from "../utils/types";
-import { GitlabCreateProjectOptions, ProjectInfo } from "../Project";
+import {
+  GitlabCreateProjectOptions,
+  ProjectInfo,
+  ProjectSearchOptions,
+} from "../Project";
 import { Group } from "../Group/group";
-import { GroupInfo } from "../Group";
+import { GroupInfo, GroupSeatchOptions } from "../Group";
 import { GitlabOptions } from ".";
 import { User } from "../User/user";
-import { RestrictedUserInfo, UserInfo } from "../User";
+import { RestrictedUserInfo, UserInfo, UserSearchOptions } from "../User";
 
 const defaultOptions: Required<GitlabOptions> = {
   privateToken: process.env.GITLAB_TOKEN || "",
@@ -35,11 +39,13 @@ export class Gitlab extends GitlabApiClientBase {
     super.resetCacheInternal();
   }
 
-  async findProjects(searchOptions: SearchOptions = {}): Promise<Project[]> {
+  async findProjects(
+    searchOptions: ProjectSearchOptions = {}
+  ): Promise<Project[]> {
     const { data } = await this.CallGitlabApi({
       endpoint: "/projects",
       method: Methods.GET,
-      params: super.getSearchParams(searchOptions),
+      params: searchOptions,
       expectedStatusCode: 200,
     });
 
@@ -48,24 +54,24 @@ export class Gitlab extends GitlabApiClientBase {
     );
   }
 
-  async findGroups(searchOptions: SearchOptions = {}): Promise<Group[]> {
+  async findGroups(searchOptions: GroupSeatchOptions = {}): Promise<Group[]> {
     const { data } = await this.CallGitlabApi({
       endpoint: "/groups",
       method: Methods.GET,
       expectedStatusCode: 200,
-      params: super.getSearchParams(searchOptions),
+      params: searchOptions,
     });
     return data.map((group: GroupInfo) => new Group(group, this.options));
   }
 
   async findUsers(
-    searchOptions: SearchOptions = {}
+    searchOptions: UserSearchOptions = {}
   ): Promise<User<RestrictedUserInfo>[]> {
     const { data } = await this.CallGitlabApi({
       endpoint: "/users",
       method: Methods.GET,
       expectedStatusCode: 200,
-      params: super.getSearchParams(searchOptions),
+      params: searchOptions,
     });
     return data.map(
       (userInfo: UserInfo) => new User<RestrictedUserInfo>(userInfo, this)

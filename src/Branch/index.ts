@@ -1,5 +1,20 @@
 import { SearchOptions } from "../utils/types";
 
+/**
+ * Represents the options for filtering branches.
+ */
+export interface BranchSearchOptions {
+  /**
+   * Return list of branches containing the search string. You can use ^term to find branches that begin with term, and term$ to find branches that end with term.
+   */
+  search?: string;
+
+  /**
+   * Return list of branches with names matching a re2 regular expression.
+   */
+  regex?: string;
+}
+
 export interface BranchInfo {
   name: string;
   commit: {

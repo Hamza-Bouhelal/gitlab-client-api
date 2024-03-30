@@ -28,7 +28,7 @@ export class Commit extends GitlabApiClientBase {
       }/pipelines`,
       method: Methods.GET,
       expectedStatusCode: 200,
-      params: super.getSearchParams(searchOptions),
+      params: searchOptions,
     });
     return data.map(
       (pipelineInfo: PipelineInfo) => new Pipeline(pipelineInfo, this.options)

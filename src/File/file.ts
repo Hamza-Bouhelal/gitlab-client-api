@@ -26,9 +26,9 @@ export class File extends GitlabApiClientBase {
       endpoint: `/projects/${this.projectId}/repository/files/${this.fileInfo.file_path}/blame`,
       method: Methods.GET,
       expectedStatusCode: 200,
-      params: super.getSearchParams({
+      params: {
         ref: this.ref,
-      } as SearchOptions),
+      } as SearchOptions,
     });
     return data;
   }

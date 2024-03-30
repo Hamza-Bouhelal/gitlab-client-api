@@ -6,6 +6,7 @@ import { Pipeline } from "../Pipeline/pipeline";
 import { GitlabOptions } from "../Gitlab";
 import { SearchOptions } from "../utils/types";
 import { PipelineInfo } from "../Pipeline";
+import { PipelineSearchOptions } from "../Branch";
 
 interface CustomMRSearchOptions extends SearchOptions {
   ref_name: string;
@@ -33,15 +34,17 @@ export class MergeRequest extends GitlabApiClientBase {
     return new Branch(data, this.options, this.mergeRequestInfo.project_id);
   }
 
-  async findPipelines(searchOptions: SearchOptions = {}): Promise<Pipeline[]> {
+  async findPipelines(
+    searchOptions: Omit<PipelineSearchOptions, "ref_name"> = {}
+  ): Promise<Pipeline[]> {
     const { data } = await this.CallGitlabApi({
       endpoint: `/projects/${this.getInfo().project_id}/pipelines`,
       method: Methods.GET,
       expectedStatusCode: 200,
-      params: super.getSearchParams({
+      params: {
         ...searchOptions,
         ref_name: this.mergeRequestInfo.source_branch,
-      } as CustomMRSearchOptions),
+      } as CustomMRSearchOptions,
     });
     return data.map(
       (pipelineInfo: PipelineInfo) => new Pipeline(pipelineInfo, this.options)

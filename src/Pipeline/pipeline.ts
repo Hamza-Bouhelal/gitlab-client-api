@@ -4,7 +4,7 @@ import { GitlabApiClientBase } from "../GitlabApiClientBase/gitlabApiClientBase"
 import { Job } from "../Job/job";
 import { GitlabOptions } from "../Gitlab";
 import { SearchOptions } from "../utils/types";
-import { JobInfo } from "../Job";
+import { JobInfo, JobSearchOptions } from "../Job";
 
 export class Pipeline extends GitlabApiClientBase {
   constructor(
@@ -19,12 +19,12 @@ export class Pipeline extends GitlabApiClientBase {
     return this.pipelineInfo;
   }
 
-  async findJobs(searchOptions: SearchOptions = {}): Promise<Job[]> {
+  async findJobs(searchOptions: JobSearchOptions = {}): Promise<Job[]> {
     const { data } = await this.CallGitlabApi({
       endpoint: `/projects/${this.pipelineInfo.project_id}/pipelines/${this.pipelineInfo.id}/jobs`,
       method: Methods.GET,
       expectedStatusCode: 200,
-      params: super.getSearchParams(searchOptions),
+      params: searchOptions,
     });
     return data.map(
       (jobInfo: JobInfo) =>

@@ -1,6 +1,21 @@
 import { CommitInfo } from "../Commit";
 import { PipelineInfo } from "../Pipeline";
 
+/**
+ * Represents the options for filtering jobs within a pipeline.
+ */
+export interface JobSearchOptions {
+  /**
+   * Include retried jobs in the response. Defaults to false. Introduced in GitLab 13.9.
+   */
+  include_retried?: boolean;
+
+  /**
+   * Scope of jobs to show. Either one of or an array of the following: created, pending, running, failed, success, canceled, skipped, waiting_for_resource, or manual. All jobs are returned if scope is not provided.
+   */
+  scope?: string | string[];
+}
+
 export interface JobInfo {
   id: number;
   status: string;

@@ -1,12 +1,6 @@
 import { GitlabOptions } from "../Gitlab";
 import { CachedRequests, Methods, RequestArgs, Response } from ".";
 import axios from "axios";
-import { SearchOptions } from "../utils/types";
-import {
-  addUserSearchParams,
-  removeUndefinedKeys,
-  removeKey,
-} from "../utils/options";
 import _ from "lodash";
 import { User } from "../User/user";
 
@@ -104,12 +98,5 @@ export class GitlabApiClientBase {
       expectedStatusCode: 200,
     });
     return new User(data, this);
-  }
-
-  protected getSearchParams(searchOptions: SearchOptions) {
-    return {
-      ...removeUndefinedKeys(removeKey(searchOptions, "asUser")),
-      ...addUserSearchParams(!!searchOptions.asUser, this.getUser.bind(this)),
-    };
   }
 }

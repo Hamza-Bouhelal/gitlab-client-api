@@ -27,17 +27,3 @@ export function removeKey<T extends object, K extends keyof T>(
   _;
   return rest;
 }
-
-export function addUserSearchParams(
-  isUser: boolean,
-  getUser: () => Promise<User>
-) {
-  return isUser
-    ? {
-        membership: true,
-        min_access_level: 10,
-        owned: true,
-        user_id: getUser().then((user) => user.getInfo().id),
-      }
-    : {};
-}

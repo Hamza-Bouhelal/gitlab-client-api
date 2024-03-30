@@ -1,3 +1,164 @@
+/**
+ * Represents the options for filtering projects.
+ */
+export interface ProjectSearchOptions {
+  /**
+   * Limit by archived status.
+   */
+  archived?: boolean;
+
+  /**
+   * Limit results to projects with IDs greater than the specified ID.
+   */
+  id_after?: number;
+
+  /**
+   * Limit results to projects with IDs less than the specified ID.
+   */
+  id_before?: number;
+
+  /**
+   * Limit results to projects which were imported from external systems by current user.
+   */
+  imported?: boolean;
+
+  /**
+   * Include hidden projects. (administrators only) Premium and Ultimate only.
+   */
+  include_hidden?: boolean;
+
+  /**
+   * Include projects pending deletion. (administrators only)
+   */
+  include_pending_delete?: boolean;
+
+  /**
+   * Limit results to projects with last activity after specified time. Format: ISO 8601 (YYYY-MM-DDTHH:MM:SSZ)
+   */
+  last_activity_after?: string;
+
+  /**
+   * Limit results to projects with last activity before specified time. Format: ISO 8601 (YYYY-MM-DDTHH:MM:SSZ)
+   */
+  last_activity_before?: string;
+
+  /**
+   * Limit by projects that the current user is a member of.
+   */
+  membership?: boolean;
+
+  /**
+   * Limit by current user minimal role (access_level).
+   */
+  min_access_level?: number;
+
+  /**
+   * Return projects ordered by id, name, path, created_at, updated_at, last_activity_at,
+   * or similarity fields. repository_size, storage_size, packages_size or wiki_size fields
+   * are only allowed for administrators. similarity (introduced in GitLab 14.1) is only
+   * available when searching and is limited to projects that the current user is a member of.
+   * Default is created_at.
+   */
+  order_by?: string;
+
+  /**
+   * Limit by projects explicitly owned by the current user.
+   */
+  owned?: boolean;
+
+  /**
+   * Limit projects where the repository checksum calculation has failed. Premium and Ultimate only.
+   */
+  repository_checksum_failed?: boolean;
+
+  /**
+   * Limit results to projects stored on repository_storage. (administrators only)
+   */
+  repository_storage?: string;
+
+  /**
+   * Include ancestor namespaces when matching search criteria. Default is false.
+   */
+  search_namespaces?: boolean;
+
+  /**
+   * Return list of projects matching the search criteria.
+   */
+  search?: string;
+
+  /**
+   * Return only limited fields for each project. This operation is a no-op without authentication where only simple fields are returned.
+   */
+  simple?: boolean;
+
+  /**
+   * Return projects sorted in asc or desc order. Default is desc.
+   */
+  sort?: string;
+
+  /**
+   * Limit by projects starred by the current user.
+   */
+  starred?: boolean;
+
+  /**
+   * Include project statistics. Available only to users with at least the Reporter role.
+   */
+  statistics?: boolean;
+
+  /**
+   * Limit results to projects with the assigned topic given by the topic ID.
+   */
+  topic_id?: number;
+
+  /**
+   * Comma-separated topic names. Limit results to projects that match all of given topics. See topics attribute.
+   */
+  topic?: string;
+
+  /**
+   * Limit results to projects last updated after the specified time. Format: ISO 8601 (YYYY-MM-DDTHH:MM:SSZ).
+   * Introduced in GitLab 15.10. For this filter to work, you must also provide updated_at as the order_by attribute.
+   */
+  updated_after?: string;
+
+  /**
+   * Limit results to projects last updated before the specified time. Format: ISO 8601 (YYYY-MM-DDTHH:MM:SSZ).
+   * Introduced in GitLab 15.10. For this filter to work, you must also provide updated_at as the order_by attribute.
+   */
+  updated_before?: string;
+
+  /**
+   * Limit by visibility public, internal, or private.
+   */
+  visibility?: string;
+
+  /**
+   * Limit projects where the wiki checksum calculation has failed. Premium and Ultimate only.
+   */
+  wiki_checksum_failed?: boolean;
+
+  /**
+   * Include custom attributes in response. (administrator only)
+   */
+  with_custom_attributes?: boolean;
+
+  /**
+   * Limit by enabled issues feature.
+   */
+  with_issues_enabled?: boolean;
+
+  /**
+   * Limit by enabled merge requests feature.
+   */
+  with_merge_requests_enabled?: boolean;
+
+  /**
+   * Limit by projects which use the given programming language.
+   */
+  with_programming_language?: string;
+}
+
 export interface ProjectInfo {
   id: number;
   description: string | null;

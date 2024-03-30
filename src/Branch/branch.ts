@@ -1,5 +1,5 @@
 import { BranchInfo, PipelineSearchOptions } from ".";
-import { CommitInfo } from "../Commit";
+import { CommitInfo, CommitSearchOptions } from "../Commit";
 import { Commit } from "../Commit/commit";
 import { Methods } from "../GitlabApiClientBase";
 import { GitlabApiClientBase } from "../GitlabApiClientBase/gitlabApiClientBase";
@@ -33,7 +33,7 @@ export class Branch extends GitlabApiClientBase {
     return this.branchInfo;
   }
 
-  async getMergeRequest(): Promise<MergeRequest> {
+  async getMergeRequest(): Promise<MergeRequest | null> {
     const customSearchOptions: CustomSearchOptions = {
       source_branch: this.branchInfo.name,
       state: "opened",
@@ -42,22 +42,22 @@ export class Branch extends GitlabApiClientBase {
       endpoint: `/projects/${this.projectId}/merge_requests`,
       method: Methods.GET,
       expectedStatusCode: 200,
-      params: super.getSearchParams(customSearchOptions),
+      params: customSearchOptions,
     });
-    return data[0]
-      ? new MergeRequest(data[0], this.options)
-      : (null as unknown as MergeRequest);
+    return data[0] ? new MergeRequest(data[0], this.options) : null;
   }
 
-  async findCommits(searchOptions: SearchOptions = {}): Promise<Commit[]> {
+  async findCommits(
+    searchOptions: Omit<CommitSearchOptions, "ref_name"> = {}
+  ): Promise<Commit[]> {
     const { data } = await this.CallGitlabApi({
       endpoint: `/projects/${this.projectId}/repository/commits`,
       method: Methods.GET,
       expectedStatusCode: 200,
-      params: super.getSearchParams({
+      params: {
         ...searchOptions,
         ref_name: this.branchInfo.name,
-      } as CustomBranchSearchOptions),
+      },
     });
     return data.map(
       (commitInfo: CommitInfo) => new Commit(commitInfo, this.options)
@@ -65,16 +65,16 @@ export class Branch extends GitlabApiClientBase {
   }
 
   async findPipelines(
-    searchOptions?: PipelineSearchOptions
+    searchOptions: Omit<PipelineSearchOptions, "ref_name"> = {}
   ): Promise<Pipeline[]> {
     const { data } = await this.CallGitlabApi({
       endpoint: `/projects/${this.projectId}/pipelines`,
       method: Methods.GET,
       expectedStatusCode: 200,
-      params: super.getSearchParams({
+      params: {
         ...searchOptions,
         ref_name: this.branchInfo.name,
-      } as CustomBranchSearchOptions),
+      } as CustomBranchSearchOptions,
     });
     return data.map(
       (pipelineInfo: PipelineInfo) => new Pipeline(pipelineInfo, this.options)
