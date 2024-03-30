@@ -190,7 +190,7 @@ const commitPipelines = await projectCommits[0].findPipelines();
 ```typescript
 const jobs = await pipeline.findJobs();
 
-await jobs[0].downloadArtifacts("./path/to/download/file.zip");
+await jobs[0].downloadArtifacts();
 ```
 
 ## License
