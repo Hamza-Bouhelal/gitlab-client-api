@@ -5,36 +5,26 @@ import { Commit } from "../Commit/commit";
 import { Pipeline } from "../Pipeline/pipeline";
 import { Methods } from "../GitlabApiClientBase";
 
-type CustomJobInfo = Omit<Omit<JobInfo, "commit">, "pipeline"> & {
-  commit: Commit;
-  pipeline: Pipeline;
-};
+export interface Job extends Omit<JobInfo, "commit" | "pipeline"> {}
 
 export class Job extends GitlabApiClientBase {
-  private jobInfo: CustomJobInfo;
+  public commit: Commit;
+  public pipeline: Pipeline;
   constructor(
     jobInfo: JobInfo,
     options: Required<GitlabOptions>,
-    private projectId: number
+    public projectId: number
   ) {
     super(options);
-    this.jobInfo = {
-      ...jobInfo,
-      commit: new Commit(jobInfo.commit, options),
-      pipeline: new Pipeline(jobInfo.pipeline, options),
-    };
+    this.commit = new Commit(jobInfo.commit, options);
+    this.pipeline = new Pipeline(jobInfo.pipeline, options);
     this.projectId = projectId;
-  }
-
-  getInfo() {
-    return this.jobInfo;
+    Object.assign(this, jobInfo);
   }
 
   async downloadArtifacts(): Promise<Buffer> {
     const { data } = await this.CallGitlabApi({
-      endpoint: `/projects/${this.projectId}/jobs/${
-        this.getInfo().id
-      }/artifacts`,
+      endpoint: `/projects/${this.projectId}/jobs/${this.id}/artifacts`,
       method: Methods.GET,
       expectedStatusCode: 200,
     });

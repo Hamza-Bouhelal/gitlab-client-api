@@ -1,17 +1,17 @@
-import { UserInfo } from ".";
-import { GitlabApiClientBase } from "../GitlabApiClientBase/gitlabApiClientBase";
+import { RestrictedUserInfo, UserInfo } from ".";
 
-export class User<T = undefined> {
-  private userInfo: T extends undefined ? UserInfo : T;
-  private clientBase: GitlabApiClientBase;
+export interface RestrictedUser extends RestrictedUserInfo {}
 
-  constructor(
-    userInfo: T extends undefined ? UserInfo : T,
-    clientBase: GitlabApiClientBase
-  ) {
-    this.userInfo = userInfo;
-    this.clientBase = clientBase;
+export class RestrictedUser {
+  constructor(userInfo: RestrictedUserInfo) {
+    Object.assign(this, userInfo);
   }
+}
 
-  getInfo = () => this.userInfo;
+export interface User extends UserInfo {}
+
+export class User extends RestrictedUser {
+  constructor(userInfo: RestrictedUserInfo) {
+    super(userInfo);
+  }
 }

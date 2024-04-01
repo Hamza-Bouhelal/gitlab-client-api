@@ -10,8 +10,8 @@ import {
 import { Group } from "../Group/group";
 import { GroupInfo, GroupSeatchOptions } from "../Group";
 import { GitlabOptions } from ".";
-import { User } from "../User/user";
-import { RestrictedUserInfo, UserInfo, UserSearchOptions } from "../User";
+import { RestrictedUser } from "../User/user";
+import { RestrictedUserInfo, UserSearchOptions } from "../User";
 
 const defaultOptions: Required<GitlabOptions> = {
   privateToken: process.env.GITLAB_TOKEN || "",
@@ -65,7 +65,7 @@ export class Gitlab extends GitlabApiClientBase {
 
   async findUsers(
     searchOptions: UserSearchOptions = {}
-  ): Promise<User<RestrictedUserInfo>[]> {
+  ): Promise<RestrictedUser> {
     const { data } = await this.CallGitlabApi({
       endpoint: "/users",
       method: Methods.GET,
@@ -73,7 +73,7 @@ export class Gitlab extends GitlabApiClientBase {
       params: searchOptions,
     });
     return data.map(
-      (userInfo: UserInfo) => new User<RestrictedUserInfo>(userInfo, this)
+      (userInfo: RestrictedUserInfo) => new RestrictedUser(userInfo)
     );
   }
 

@@ -19,31 +19,24 @@ import { GitlabOptions } from "../Gitlab";
 import { decodeBase64 } from "../utils/base64";
 import { IssueInfo, IssueSearchOptions } from "../Issue";
 
+export interface Project extends ProjectInfo {}
+
 export class Project extends GitlabApiClientBase {
-  constructor(
-    private projectInfo: ProjectInfo,
-    options: Required<GitlabOptions>
-  ) {
+  constructor(projectInfo: ProjectInfo, options: Required<GitlabOptions>) {
     super(options);
-    this.projectInfo = projectInfo;
+    Object.assign(this, projectInfo);
   }
-
-  getInfo() {
-    return this.projectInfo;
-  }
-
   async findBranches(
     searchOptions: BranchSearchOptions = {}
   ): Promise<Branch[]> {
     const { data } = await this.CallGitlabApi({
-      endpoint: `/projects/${this.projectInfo.id}/repository/branches`,
+      endpoint: `/projects/${this.id}/repository/branches`,
       method: Methods.GET,
       expectedStatusCode: 200,
       params: searchOptions,
     });
     return data.map(
-      (branch: BranchInfo) =>
-        new Branch(branch, this.options, this.projectInfo.id)
+      (branch: BranchInfo) => new Branch(branch, this.options, this.id)
     );
   }
 
@@ -51,7 +44,7 @@ export class Project extends GitlabApiClientBase {
     searchOptions: MergeRequestSearchOptions = {}
   ): Promise<MergeRequest[]> {
     const { data } = await this.CallGitlabApi({
-      endpoint: `/projects/${this.projectInfo.id}/merge_requests`,
+      endpoint: `/projects/${this.id}/merge_requests`,
       method: Methods.GET,
       expectedStatusCode: 200,
       params: searchOptions,
@@ -66,7 +59,7 @@ export class Project extends GitlabApiClientBase {
     searchOptions: CommitSearchOptions = {}
   ): Promise<Commit[]> {
     const { data } = await this.CallGitlabApi({
-      endpoint: `/projects/${this.projectInfo.id}/repository/commits`,
+      endpoint: `/projects/${this.id}/repository/commits`,
       method: Methods.GET,
       expectedStatusCode: 200,
       params: searchOptions,
@@ -78,7 +71,7 @@ export class Project extends GitlabApiClientBase {
     searchOptions: PipelineSearchOptions = {}
   ): Promise<Pipeline[]> {
     const { data } = await this.CallGitlabApi({
-      endpoint: `/projects/${this.projectInfo.id}/pipelines`,
+      endpoint: `/projects/${this.id}/pipelines`,
       method: Methods.GET,
       expectedStatusCode: 200,
       params: searchOptions,
@@ -90,7 +83,7 @@ export class Project extends GitlabApiClientBase {
 
   async findIssues(searchOptions: IssueSearchOptions = {}): Promise<Issue[]> {
     const { data } = await this.CallGitlabApi({
-      endpoint: `/projects/${this.projectInfo.id}/issues`,
+      endpoint: `/projects/${this.id}/issues`,
       method: Methods.GET,
       expectedStatusCode: 200,
       params: searchOptions,
@@ -100,7 +93,7 @@ export class Project extends GitlabApiClientBase {
 
   async getFile(filePath: string, ref: string) {
     const { data } = await this.CallGitlabApi({
-      endpoint: `/projects/${this.projectInfo.id}/repository/files/${filePath}`,
+      endpoint: `/projects/${this.id}/repository/files/${filePath}`,
       method: Methods.GET,
       expectedStatusCode: 200,
       params: { ref },
@@ -108,7 +101,7 @@ export class Project extends GitlabApiClientBase {
     return new File(
       { ...data, content: decodeBase64(data.content) },
       this.options,
-      this.projectInfo.id,
+      this.id,
       ref
     );
   }

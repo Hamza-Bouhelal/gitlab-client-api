@@ -53,7 +53,7 @@ export interface UserSearchOptions {
   without_project_bots?: boolean;
 }
 
-export interface UserInfo {
+export interface RestrictedUserInfo {
   id: number;
   username: string;
   name: string;
@@ -61,6 +61,9 @@ export interface UserInfo {
   locked: boolean;
   avatar_url: string;
   web_url: string;
+}
+
+export interface UserInfo extends RestrictedUserInfo {
   created_at: string;
   bio: string;
   location: string;
@@ -98,14 +101,4 @@ export interface UserInfo {
   shared_runners_minutes_limit: number | null;
   extra_shared_runners_minutes_limit: number | null;
   scim_identities: unknown[];
-}
-
-export interface RestrictedUserInfo {
-  id: number;
-  username: string;
-  name: string;
-  state: string;
-  locked: boolean;
-  avatar_url: string;
-  web_url: string;
 }

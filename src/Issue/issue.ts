@@ -2,13 +2,11 @@ import { IssueInfo } from ".";
 import { GitlabApiClientBase } from "../GitlabApiClientBase/gitlabApiClientBase";
 import { GitlabOptions } from "../Gitlab";
 
-export class Issue extends GitlabApiClientBase {
-  constructor(private issueInfo: IssueInfo, options: Required<GitlabOptions>) {
-    super(options);
-    this.issueInfo = issueInfo;
-  }
+export interface Issue extends IssueInfo {}
 
-  getInfo() {
-    return this.issueInfo;
+export class Issue extends GitlabApiClientBase {
+  constructor(issueInfo: IssueInfo, options: Required<GitlabOptions>) {
+    super(options);
+    Object.assign(this, issueInfo);
   }
 }

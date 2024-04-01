@@ -97,6 +97,6 @@ export class GitlabApiClientBase {
       method: Methods.GET,
       expectedStatusCode: 200,
     });
-    return new User(data, this);
+    return new User(data);
   }
 }

@@ -7,38 +7,36 @@ import { GitlabOptions } from "../Gitlab";
 import { PipelineInfo } from "../Pipeline";
 import { PipelineSearchOptions } from "../Branch";
 
+export interface MergeRequest extends MergeRequestInfo {}
+
 export class MergeRequest extends GitlabApiClientBase {
   constructor(
-    private mergeRequestInfo: MergeRequestInfo,
+    mergeRequestInfo: MergeRequestInfo,
     options: Required<GitlabOptions>
   ) {
     super(options);
-    this.mergeRequestInfo = mergeRequestInfo;
-  }
-
-  getInfo() {
-    return this.mergeRequestInfo;
+    Object.assign(this, mergeRequestInfo);
   }
 
   async getBranch(): Promise<Branch> {
     const { data } = await this.CallGitlabApi({
-      endpoint: `/projects/${this.mergeRequestInfo.project_id}/repository/branches/${this.mergeRequestInfo.source_branch}`,
+      endpoint: `/projects/${this.project_id}/repository/branches/${this.source_branch}`,
       method: Methods.GET,
       expectedStatusCode: 200,
     });
-    return new Branch(data, this.options, this.mergeRequestInfo.project_id);
+    return new Branch(data, this.options, this.project_id);
   }
 
   async findPipelines(
     searchOptions: Omit<PipelineSearchOptions, "ref_name"> = {}
   ): Promise<Pipeline[]> {
     const { data } = await this.CallGitlabApi({
-      endpoint: `/projects/${this.getInfo().project_id}/pipelines`,
+      endpoint: `/projects/${this.project_id}/pipelines`,
       method: Methods.GET,
       expectedStatusCode: 200,
       params: {
         ...searchOptions,
-        ref_name: this.mergeRequestInfo.source_branch,
+        ref_name: this.source_branch,
       },
     });
     return data.map(

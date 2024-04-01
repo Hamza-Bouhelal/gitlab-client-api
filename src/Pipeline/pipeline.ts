@@ -5,29 +5,23 @@ import { Job } from "../Job/job";
 import { GitlabOptions } from "../Gitlab";
 import { JobInfo, JobSearchOptions } from "../Job";
 
-export class Pipeline extends GitlabApiClientBase {
-  constructor(
-    private pipelineInfo: PipelineInfo,
-    options: Required<GitlabOptions>
-  ) {
-    super(options);
-    this.pipelineInfo = pipelineInfo;
-  }
+export interface Pipeline extends PipelineInfo {}
 
-  getInfo() {
-    return this.pipelineInfo;
+export class Pipeline extends GitlabApiClientBase {
+  constructor(pipelineInfo: PipelineInfo, options: Required<GitlabOptions>) {
+    super(options);
+    Object.assign(this, pipelineInfo);
   }
 
   async findJobs(searchOptions: JobSearchOptions = {}): Promise<Job[]> {
     const { data } = await this.CallGitlabApi({
-      endpoint: `/projects/${this.pipelineInfo.project_id}/pipelines/${this.pipelineInfo.id}/jobs`,
+      endpoint: `/projects/${this.project_id}/pipelines/${this.id}/jobs`,
       method: Methods.GET,
       expectedStatusCode: 200,
       params: searchOptions,
     });
     return data.map(
-      (jobInfo: JobInfo) =>
-        new Job(jobInfo, this.options, this.pipelineInfo.project_id)
+      (jobInfo: JobInfo) => new Job(jobInfo, this.options, this.project_id)
     );
   }
 }

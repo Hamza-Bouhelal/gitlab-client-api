@@ -9,24 +9,22 @@ import { Pipeline } from "../Pipeline/pipeline";
 import { GitlabOptions } from "../Gitlab";
 import { MergeRequestSearchOptions } from "../MergeRequest";
 
+export interface Branch extends BranchInfo {}
+
 export class Branch extends GitlabApiClientBase {
   constructor(
-    private branchInfo: BranchInfo,
+    branchInfo: BranchInfo,
     options: Required<GitlabOptions>,
     private projectId: number
   ) {
     super(options);
-    this.branchInfo = branchInfo;
     this.projectId = projectId;
-  }
-
-  getInfo() {
-    return this.branchInfo;
+    Object.assign(this, branchInfo);
   }
 
   async getMergeRequest(): Promise<MergeRequest | null> {
     const customSearchOptions: MergeRequestSearchOptions = {
-      source_branch: this.branchInfo.name,
+      source_branch: this.name,
       state: "opened",
     };
     const { data } = await this.CallGitlabApi({
@@ -47,7 +45,7 @@ export class Branch extends GitlabApiClientBase {
       expectedStatusCode: 200,
       params: {
         ...searchOptions,
-        ref_name: this.branchInfo.name,
+        ref_name: this.name,
       },
     });
     return data.map(
@@ -64,7 +62,7 @@ export class Branch extends GitlabApiClientBase {
       expectedStatusCode: 200,
       params: {
         ...searchOptions,
-        ref_name: this.branchInfo.name,
+        ref_name: this.name,
       },
     });
     return data.map(

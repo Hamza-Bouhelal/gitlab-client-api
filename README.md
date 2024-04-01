@@ -57,15 +57,19 @@ gitlab.resetCache();
 
 ### Users
 
+Find users search Options: [UserSearchOptions]()
+
 ```typescript
 // find users
-const users = await gitlab.findUsers({ search: "Hamza-bouhelal" });
+const users = await gitlab.findUsers({ username: "Hamza-bouhelal" });
 
 // find user associated with the private token
 const user = await gitlab.getUser();
 ```
 
 ### Groups
+
+Find groups search Options: [GroupSearchOptions]()
 
 ```typescript
 // gets all groups matching the search term

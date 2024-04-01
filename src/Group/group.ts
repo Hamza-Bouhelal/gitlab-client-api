@@ -5,21 +5,19 @@ import { ProjectInfo, ProjectSearchOptions } from "../Project";
 import { Project } from "../Project/project";
 import { GitlabOptions } from "../Gitlab";
 
-export class Group extends GitlabApiClientBase {
-  constructor(private groupInfo: GroupInfo, options: Required<GitlabOptions>) {
-    super(options);
-    this.groupInfo = groupInfo;
-  }
+export interface Group extends GroupInfo {}
 
-  getInfo() {
-    return this.groupInfo;
+export class Group extends GitlabApiClientBase {
+  constructor(groupInfo: GroupInfo, options: Required<GitlabOptions>) {
+    super(options);
+    Object.assign(this, groupInfo);
   }
 
   async findProjects(
     searchOptions: ProjectSearchOptions = {}
   ): Promise<Project[]> {
     const { data } = await this.CallGitlabApi({
-      endpoint: `/groups/${this.groupInfo.id}/projects`,
+      endpoint: `/groups/${this.id}/projects`,
       method: Methods.GET,
       expectedStatusCode: 200,
       params: searchOptions,
