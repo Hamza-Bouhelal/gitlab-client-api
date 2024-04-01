@@ -1,10 +1,10 @@
-import { BranchInfo, PipelineSearchOptions } from ".";
+import { BranchInfo } from ".";
 import { CommitInfo, CommitSearchOptions } from "../Commit";
 import { Commit } from "../Commit/commit";
 import { Methods } from "../GitlabApiClientBase";
 import { GitlabApiClientBase } from "../GitlabApiClientBase/gitlabApiClientBase";
 import { MergeRequest } from "../MergeRequest/mergeRequest";
-import { PipelineInfo } from "../Pipeline";
+import { PipelineInfo, PipelineSearchOptions } from "../Pipeline";
 import { Pipeline } from "../Pipeline/pipeline";
 import { GitlabOptions } from "../Gitlab";
 import { MergeRequestSearchOptions } from "../MergeRequest";

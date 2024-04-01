@@ -1,10 +1,9 @@
 import { CommitInfo } from ".";
 import { Methods } from "../GitlabApiClientBase";
 import { GitlabApiClientBase } from "../GitlabApiClientBase/gitlabApiClientBase";
-import { PipelineInfo } from "../Pipeline";
+import { PipelineInfo, PipelineSearchOptions } from "../Pipeline";
 import { Pipeline } from "../Pipeline/pipeline";
 import { GitlabOptions } from "../Gitlab";
-import { PipelineSearchOptions } from "../Branch";
 
 export interface Commit extends CommitInfo {}
 

@@ -1,9 +1,5 @@
 import { ProjectInfo } from ".";
-import {
-  BranchInfo,
-  BranchSearchOptions,
-  PipelineSearchOptions,
-} from "../Branch";
+import { BranchInfo, BranchSearchOptions } from "../Branch";
 import { Branch } from "../Branch/branch";
 import { CommitInfo, CommitSearchOptions } from "../Commit";
 import { Commit } from "../Commit/commit";
@@ -13,7 +9,7 @@ import { GitlabApiClientBase } from "../GitlabApiClientBase/gitlabApiClientBase"
 import { Issue } from "../Issue/issue";
 import { MergeRequestInfo, MergeRequestSearchOptions } from "../MergeRequest";
 import { MergeRequest } from "../MergeRequest/mergeRequest";
-import { PipelineInfo } from "../Pipeline";
+import { PipelineInfo, PipelineSearchOptions } from "../Pipeline";
 import { Pipeline } from "../Pipeline/pipeline";
 import { GitlabOptions } from "../Gitlab";
 import { decodeBase64 } from "../utils/base64";

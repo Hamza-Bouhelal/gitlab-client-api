@@ -4,8 +4,7 @@ import { Methods } from "../GitlabApiClientBase";
 import { GitlabApiClientBase } from "../GitlabApiClientBase/gitlabApiClientBase";
 import { Pipeline } from "../Pipeline/pipeline";
 import { GitlabOptions } from "../Gitlab";
-import { PipelineInfo } from "../Pipeline";
-import { PipelineSearchOptions } from "../Branch";
+import { PipelineInfo, PipelineSearchOptions } from "../Pipeline";
 
 export interface MergeRequest extends MergeRequestInfo {}
 
