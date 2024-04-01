@@ -179,39 +179,38 @@ console.log(masterBranchCommits[0]?.message);
 
 Find Pipeline search Options: [PipelineSearchOptions](https://gitlab.com/bouhelalhamza/gitlab-client-api/-/blob/master/src/Pipeline/index.ts?ref_type=heads#L4)
 
+Pipeline Object interface: [PipelineInfo](https://gitlab.com/bouhelalhamza/gitlab-client-api/-/blob/master/src/Pipeline/index.ts?ref_type=heads#L105)
+
 ```typescript
 // Find all pipelines for the project
 const projectsPipelines = await myProject.findPipelines();
-
-const mergeRequests = await myProject.findMergeRequests();
-const mergeRequest = mergeRequests[0];
-if (!mergeRequest) return console.error("Merge request not found");
+console.log(projectsPipelines[0]?.status);
 
 // Find all pipelines for the merge request
 const mergeRequestPipelines = await mergeRequest.findPipelines();
-
-const branches = await myProject.findBranches();
-
-const masterBranch = branches.find(
-  (branch) => branch.getInfo().name === "master"
-);
-if (!masterBranch) return console.error("Master branch not found");
+console.log(mergeRequestPipelines[0]?.status);
 
 // Find all pipelines for the master branch
 const masterBranchpipelines = await masterBranch.findPipelines();
-
-const projectCommits = await myProject.findCommits();
+console.log(masterBranchpipelines[0]?.status);
 
 // Find all pipelines for the first commit
 const commitPipelines = await projectCommits[0].findPipelines();
+console.log(commitPipelines[0]?.status);
 ```
 
 ### Jobs
 
+Find Job search Options: [JobSearchOptions](https://gitlab.com/bouhelalhamza/gitlab-client-api/-/blob/master/src/Job/index.ts?ref_type=heads#L7)
+
+Job Object interface: [JobInfo](https://gitlab.com/bouhelalhamza/gitlab-client-api/-/blob/master/src/Job/index.ts?ref_type=heads#L19)
+
 ```typescript
 const jobs = await pipeline.findJobs();
+console.log(jobs[0]?.status);
 
-await jobs[0].downloadArtifacts();
+// Download artifacts from a job
+const buffer = await jobs[0].downloadArtifacts();
 ```
 
 ## License
