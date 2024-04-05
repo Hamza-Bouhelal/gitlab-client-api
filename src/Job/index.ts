@@ -85,3 +85,8 @@ export interface JobInfo {
   artifacts_expire_at: string;
   tag_list: string[];
 }
+
+export interface JobVariableAttribute {
+  key: string;
+  value: string;
+}

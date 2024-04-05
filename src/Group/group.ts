@@ -26,4 +26,12 @@ export class Group extends GitlabApiClientBase {
       (project: ProjectInfo) => new Project(project, this.options)
     );
   }
+
+  async delete(): Promise<void> {
+    await this.CallGitlabApi({
+      endpoint: `/groups/${this.id}`,
+      method: Methods.DELETE,
+      expectedStatusCode: 204,
+    });
+  }
 }

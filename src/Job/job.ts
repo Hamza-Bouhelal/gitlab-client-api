@@ -1,4 +1,4 @@
-import { JobInfo } from ".";
+import { JobInfo, JobVariableAttribute } from ".";
 import { GitlabApiClientBase } from "../GitlabApiClientBase/gitlabApiClientBase";
 import { GitlabOptions } from "../Gitlab";
 import { Commit } from "../Commit/commit";
@@ -13,10 +13,10 @@ export class Job extends GitlabApiClientBase {
   constructor(
     jobInfo: JobInfo,
     options: Required<GitlabOptions>,
-    public projectId: number
+    private projectId: number
   ) {
     super(options);
-    this.commit = new Commit(jobInfo.commit, options);
+    this.commit = new Commit(jobInfo.commit, options, projectId);
     this.pipeline = new Pipeline(jobInfo.pipeline, options);
     this.projectId = projectId;
     Object.assign(this, jobInfo);
@@ -29,5 +29,40 @@ export class Job extends GitlabApiClientBase {
       expectedStatusCode: 200,
     });
     return data;
+  }
+
+  async cancel(): Promise<void> {
+    await this.CallGitlabApi({
+      endpoint: `/projects/${this.projectId}/jobs/${this.id}/cancel`,
+      method: Methods.POST,
+      expectedStatusCode: 201,
+    });
+  }
+
+  async retry(): Promise<Job> {
+    const { data } = await this.CallGitlabApi({
+      endpoint: `/projects/${this.projectId}/jobs/${this.id}/retry`,
+      method: Methods.POST,
+      expectedStatusCode: 201,
+    });
+    return new Job(data, this.options, this.projectId);
+  }
+
+  async erase(): Promise<void> {
+    const { data } = await this.CallGitlabApi({
+      endpoint: `/projects/${this.projectId}/jobs/${this.id}/erase`,
+      method: Methods.POST,
+      expectedStatusCode: 201,
+    });
+    Object.assign(this, data);
+  }
+
+  async play(jobVariablesAttributes: JobVariableAttribute[]): Promise<void> {
+    await this.CallGitlabApi({
+      endpoint: `/projects/${this.projectId}/jobs/${this.id}/play`,
+      method: Methods.POST,
+      expectedStatusCode: 201,
+      data: { job_variables_attributes: jobVariablesAttributes },
+    });
   }
 }

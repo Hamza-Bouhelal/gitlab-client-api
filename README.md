@@ -39,7 +39,6 @@ import { Gitlab } from "gitlab-client-api";
 // Create a new instance of the gitlab client
 // Either set the private token as options of provide env variable GITLAB_TOKEN
 // Setting cache to true will cache the results of requests that were made with that instance of the client
-// Cache can be disables within individual requests by setting cache to false
 
 const gitlab = new Gitlab({
   privateToken: "your-private-token",
@@ -78,10 +77,18 @@ Find groups search Options: [GroupSearchOptions](https://gitlab.com/bouhelalhamz
 
 Group Object interface: [GroupInfo](https://gitlab.com/bouhelalhamza/gitlab-client-api/-/blob/master/src/Group/index.ts?ref_type=heads#L67)
 
+Create Group Options: [CreateGroupOptions](https://gitlab.com/bouhelalhamza/gitlab-client-api/-/blob/master/src/Group/index.ts?ref_type=heads#L98)
+
 ```typescript
 // gets all groups matching the search term
 const groups = await gitlab.findGroups({ search: "gitlab" });
 console.log(groups[0]?.name);
+
+// create new group
+const newGroup = await gitlab.createGroup({ name: "test", path: "test" });
+
+// delete group
+await newGroup.delete();
 ```
 
 ### Projects
@@ -100,6 +107,15 @@ console.log(projects[0]?.id);
 // create new project
 const newProject = await gitlab.createProject({ name: "test" });
 console.log(newProject.id);
+
+// archive project
+await newProject.archive();
+
+// unarchive project
+await newProject.unarchive();
+
+// delete project
+await newProject.delete();
 ```
 
 ### Issues
@@ -108,10 +124,21 @@ Find Issue search Options: [IssueSearchOptions](https://gitlab.com/bouhelalhamza
 
 Issue Object interface: [IssueInfo](https://gitlab.com/bouhelalhamza/gitlab-client-api/-/blob/master/src/Issue/index.ts?ref_type=heads#L165)
 
+New Issue Options: [CreateIssueOptions](https://gitlab.com/bouhelalhamza/gitlab-client-api/-/blob/master/src/Issue/index.ts?ref_type=heads#L229)
+
 ```typescript
 // find issues in project
 const issues = await myProject.findIssues();
 console.log(issues[0]?.author);
+
+// create a new issue
+const newIssue = await myProject.createIssue({
+  title: "New Issue",
+  description: "This is a new issue",
+});
+
+// delete an issue
+await newIssue.delete();
 ```
 
 ### Files
@@ -133,12 +160,26 @@ Find Merge Request search Options: [MergeRequestSearchOptions](https://gitlab.co
 
 Merge Request Object interface: [MergeRequestInfo](https://gitlab.com/bouhelalhamza/gitlab-client-api/-/blob/master/src/MergeRequest/index.ts?ref_type=heads#L183)
 
+New Merge Request Options: [CreateMergeRequestOptions](https://gitlab.com/bouhelalhamza/gitlab-client-api/-/blob/master/src/MergeRequest/index.ts?ref_type=heads#L265)
+
 ```typescript
 // get all merge requests of a project
 const mergeRequests = await project.findMergeRequests({
   search: "my-merge-request-title",
 });
 console.log(mergeRequests[0]?.author);
+
+// create a new merge request
+const newMergeRequest = await someBranch.createMergeRequest({
+  target_branch: "master",
+  title: "New Merge Request",
+});
+
+// accept and merge a merge request
+await newMergeRequest.merge();
+
+// delete a merge request
+await newMergeRequest.delete();
 ```
 
 ### Branches
@@ -155,6 +196,13 @@ console.log(branches[0]?.name);
 // get branch from a found pipeline
 const branchFromPipeline = await pipeline.getBranch();
 console.log(branchFromPipeline.name);
+
+// create a new branch
+const newBranch = await project.createBranch("new-branch", "master");
+
+// delete a branch
+// WARNING: This will delete the branch and all of its commits
+await newBranch.delete();
 ```
 
 ### Commits
@@ -173,6 +221,10 @@ console.log(projectCommits[0]?.author_name);
 // get commits of a branch
 const masterBranchCommits = await masterBranch.findCommits();
 console.log(masterBranchCommits[0]?.message);
+
+// Revert a commit
+// WARNING: This will create a new commit that reverts the original commit
+const revertCommit = await projectCommits[0].revert();
 ```
 
 ### Pipelines
@@ -190,13 +242,26 @@ console.log(projectsPipelines[0]?.status);
 const mergeRequestPipelines = await mergeRequest.findPipelines();
 console.log(mergeRequestPipelines[0]?.status);
 
+// Find all pipelines for the first commit
+const commitPipelines = await projectCommits[0].findPipelines();
+console.log(commitPipelines[0]?.status);
+
 // Find all pipelines for the master branch
 const masterBranchpipelines = await masterBranch.findPipelines();
 console.log(masterBranchpipelines[0]?.status);
 
-// Find all pipelines for the first commit
-const commitPipelines = await projectCommits[0].findPipelines();
-console.log(commitPipelines[0]?.status);
+// Create a new pipeline for the master branch
+const newPipeline = await masterBranch.createPipeline();
+console.log(newPipeline.web_url);
+
+// Retry a pipeline
+const retriedPipeline = await newPipeline.retry();
+
+// Cancel a pipeline
+await retriedPipeline.cancel();
+
+// Delete a pipeline
+await retriedPipeline.delete();
 ```
 
 ### Jobs
@@ -211,6 +276,18 @@ console.log(jobs[0]?.status);
 
 // Download artifacts from a job
 const buffer = await jobs[0].downloadArtifacts();
+
+// Retry a job
+const retriedJob = await jobs[0].retry();
+
+// Cancel a job
+await retriedJob.cancel();
+
+// Erase a job
+await retriedJob.erase();
+
+// Start a job
+await retriedJob.play();
 ```
 
 ## License
