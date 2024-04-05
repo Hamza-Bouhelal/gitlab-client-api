@@ -24,4 +24,29 @@ export class Pipeline extends GitlabApiClientBase {
       (jobInfo: JobInfo) => new Job(jobInfo, this.options, this.project_id)
     );
   }
+
+  async retry(): Promise<Pipeline> {
+    const { data } = await this.CallGitlabApi({
+      endpoint: `/projects/${this.project_id}/pipelines/${this.id}/retry`,
+      method: Methods.POST,
+      expectedStatusCode: 201,
+    });
+    return new Pipeline(data, this.options);
+  }
+
+  async cancel(): Promise<void> {
+    await this.CallGitlabApi({
+      endpoint: `/projects/${this.project_id}/pipelines/${this.id}/cancel`,
+      method: Methods.POST,
+      expectedStatusCode: 201,
+    });
+  }
+
+  async delete(): Promise<void> {
+    await this.CallGitlabApi({
+      endpoint: `/projects/${this.project_id}/pipelines/${this.id}`,
+      method: Methods.DELETE,
+      expectedStatusCode: 204,
+    });
+  }
 }

@@ -36,19 +36,51 @@ export class GitlabApiClientBase {
     }
     let response;
     try {
-      response = await axiosMethods[options.method](
-        `${this.options.gitlabUrl.replace(/\/$/, "")}/api/v4${
-          options.endpoint
-        }`,
-        {
+      if (options.method === Methods.FORM_POST) {
+        const data = new URLSearchParams();
+        if (options.data && typeof options.data === "object") {
+          for (const [key, value] of Object.entries(options.data)) {
+            data.append(key, value);
+          }
+        }
+        const url = new URL(
+          `${this.options.gitlabUrl.replace(/\/$/, "")}/api/v4${
+            options.endpoint
+          }`
+        );
+        if (options.params) {
+          for (const [key, value] of Object.entries(options.params)) {
+            url.searchParams.append(key, value as string);
+          }
+        }
+        const res = await fetch(url, {
+          body: data,
           headers: {
             "PRIVATE-TOKEN": this.options.privateToken,
-            ...(options.headers || {}),
+            "Content-Type": "application/x-www-form-urlencoded",
           },
-          data: options.data,
-          params: options.params,
-        }
-      );
+          method: "POST",
+        });
+        response = {
+          status: res.status,
+          data: await res.json(),
+          headers: res.headers,
+        };
+      } else {
+        response = await axiosMethods[options.method](
+          `${this.options.gitlabUrl.replace(/\/$/, "")}/api/v4${
+            options.endpoint
+          }`,
+          {
+            headers: {
+              "PRIVATE-TOKEN": this.options.privateToken,
+              ...(options.headers || {}),
+            },
+            data: options.data,
+            params: options.params,
+          }
+        );
+      }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       if (err.response) {
@@ -79,7 +111,11 @@ export class GitlabApiClientBase {
       throw new Error(
         `Gitlab responded with a ${
           response.status
-        } status code:\n${JSON.stringify(response.data || {}, null, 2)}`
+        } status code:\nRequest: ${JSON.stringify(
+          options || {},
+          null,
+          2
+        )}\nResponse: ${JSON.stringify(response.data || {}, null, 2)}`
       );
     }
     const customResponse = {

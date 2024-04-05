@@ -7,7 +7,10 @@ import { MergeRequest } from "../MergeRequest/mergeRequest";
 import { PipelineInfo, PipelineSearchOptions } from "../Pipeline";
 import { Pipeline } from "../Pipeline/pipeline";
 import { GitlabOptions } from "../Gitlab";
-import { MergeRequestSearchOptions } from "../MergeRequest";
+import {
+  MergeRequestSearchOptions,
+  NewMergeRequestOptions,
+} from "../MergeRequest";
 
 export interface Branch extends BranchInfo {}
 
@@ -49,7 +52,8 @@ export class Branch extends GitlabApiClientBase {
       },
     });
     return data.map(
-      (commitInfo: CommitInfo) => new Commit(commitInfo, this.options)
+      (commitInfo: CommitInfo) =>
+        new Commit(commitInfo, this.options, this.projectId, this.name)
     );
   }
 
@@ -68,5 +72,38 @@ export class Branch extends GitlabApiClientBase {
     return data.map(
       (pipelineInfo: PipelineInfo) => new Pipeline(pipelineInfo, this.options)
     );
+  }
+
+  async createPipeline(): Promise<Pipeline> {
+    const { data } = await this.CallGitlabApi({
+      endpoint: `/projects/${this.projectId}/pipeline`,
+      method: Methods.POST,
+      expectedStatusCode: 201,
+      data: { ref: this.name },
+    });
+    return new Pipeline(data, this.options);
+  }
+
+  async createMergeRequest(
+    mergeRequestInfo: Omit<NewMergeRequestOptions, "source_branch">
+  ): Promise<MergeRequest> {
+    const { data } = await this.CallGitlabApi({
+      endpoint: `/projects/${this.projectId}/merge_requests`,
+      method: Methods.POST,
+      expectedStatusCode: 201,
+      data: {
+        ...mergeRequestInfo,
+        source_branch: this.name,
+      },
+    });
+    return new MergeRequest(data, this.options);
+  }
+
+  async delete(): Promise<void> {
+    await this.CallGitlabApi({
+      endpoint: `/projects/${this.projectId}/repository/branches/${this.name}`,
+      method: Methods.DELETE,
+      expectedStatusCode: 204,
+    });
   }
 }

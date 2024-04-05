@@ -42,4 +42,22 @@ export class MergeRequest extends GitlabApiClientBase {
       (pipelineInfo: PipelineInfo) => new Pipeline(pipelineInfo, this.options)
     );
   }
+
+  async delete(): Promise<void> {
+    const { data } = await this.CallGitlabApi({
+      endpoint: `/projects/${this.project_id}/merge_requests/${this.iid}`,
+      method: Methods.DELETE,
+      expectedStatusCode: 204,
+    });
+    Object.assign(this, data);
+  }
+
+  async merge(): Promise<void> {
+    const { data } = await this.CallGitlabApi({
+      endpoint: `/projects/${this.project_id}/merge_requests/${this.iid}/merge`,
+      method: Methods.PUT,
+      expectedStatusCode: 200,
+    });
+    Object.assign(this, data);
+  }
 }

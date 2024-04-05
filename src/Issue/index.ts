@@ -225,3 +225,85 @@ export interface IssueInfo {
   moved_to_id: number | null;
   service_desk_reply_to: string | null;
 }
+
+export interface IssueCreateOptions {
+  /**
+   * The ID of the user to assign the issue to. Only appears on GitLab Free.
+   */
+  assignee_id?: number;
+
+  /**
+   * The IDs of the users to assign the issue to. Premium and Ultimate only.
+   */
+  assignee_ids?: number[];
+
+  /**
+   * Set an issue to be confidential. Default is false.
+   */
+  confidential?: boolean;
+
+  /**
+   * When the issue was created. Date time string, ISO 8601 formatted.
+   */
+  created_at?: string;
+
+  /**
+   * The description of an issue. Limited to 1,048,576 characters.
+   */
+  description?: string;
+
+  /**
+   * The ID of a discussion to resolve. This fills out the issue with a default description and mark the discussion as resolved. Use in combination with merge_request_to_resolve_discussions_of.
+   */
+  discussion_to_resolve?: string;
+
+  /**
+   * The due date. Date time string in the format YYYY-MM-DD.
+   */
+  due_date?: string;
+
+  /**
+   * ID of the epic to add the issue to. Valid values are greater than or equal to 0. Premium and Ultimate only.
+   */
+  epic_id?: number;
+
+  /**
+   * IID of the epic to add the issue to. Valid values are greater than or equal to 0. (deprecated, scheduled for removal in API version 5). Premium and Ultimate only.
+   */
+  epic_iid?: number;
+
+  /**
+   * The internal ID of the project’s issue (requires administrator or project owner rights).
+   */
+  iid?: number | string;
+
+  /**
+   * The type of issue. One of issue, incident, test_case, or task. Default is issue.
+   */
+  issue_type?: string;
+
+  /**
+   * Comma-separated label names to assign to the new issue. If a label does not already exist, this API request creates a new project label and assigns it to the issue.
+   */
+  labels?: string;
+
+  /**
+   * The IID of a merge request in which to resolve all issues. This fills out the issue with a default description and mark all discussions as resolved. When passing a description or title, these values take precedence over the default values.
+   */
+  merge_request_to_resolve_discussions_of?: number;
+
+  /**
+   * The global ID of a milestone to assign issue. To find the milestone_id associated with a milestone, view an issue with the milestone assigned and use the API to retrieve the issue’s details.
+   */
+  milestone_id?: number;
+
+  /**
+   * The title of an issue.
+   */
+  title: string;
+
+  /**
+   * The weight of the issue. Valid values are greater than or equal to 0. Premium and Ultimate only.
+   */
+  weight?: number;
+}

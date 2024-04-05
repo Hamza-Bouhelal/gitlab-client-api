@@ -1,7 +1,7 @@
 export interface RequestArgs {
   endpoint: string;
   method: Methods;
-  data?: object;
+  data?: object | string;
   params?: object;
   headers?: object;
   expectedStatusCode: number;
@@ -13,6 +13,7 @@ export enum Methods {
   PUT = "PUT",
   DELETE = "DELETE",
   PATCH = "PATCH",
+  FORM_POST = "FORM_POST",
 }
 
 export interface Response {

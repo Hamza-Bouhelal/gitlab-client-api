@@ -258,3 +258,83 @@ export interface MergeRequestInfo {
   blocking_discussions_resolved: boolean;
   approvals_before_merge: boolean;
 }
+
+/**
+ * Represents a Merge Request object.
+ */
+export interface NewMergeRequestOptions {
+  /**
+   * The source branch.
+   */
+  source_branch: string;
+
+  /**
+   * The target branch.
+   */
+  target_branch: string;
+
+  /**
+   * Title of MR.
+   */
+  title: string;
+
+  /**
+   * Allow commits from members who can merge to the target branch.
+   */
+  allow_collaboration?: boolean;
+
+  /**
+   * Number of approvals required before this can be merged (Deprecated in GitLab 16.0. Premium and Ultimate only).
+   */
+  approvals_before_merge?: number;
+
+  /**
+   * Alias of allow_collaboration.
+   */
+  allow_maintainer_to_push?: boolean;
+
+  /**
+   * Assignee user ID.
+   */
+  assignee_id?: number;
+
+  /**
+   * The ID of the users to assign the merge request to. Set to 0 or provide an empty value to unassign all assignees.
+   */
+  assignee_ids?: number[];
+
+  /**
+   * Description of the merge request. Limited to 1,048,576 characters.
+   */
+  description?: string;
+
+  /**
+   * Labels for the merge request, as a comma-separated list.
+   */
+  labels?: string;
+
+  /**
+   * The global ID of a milestone.
+   */
+  milestone_id?: number;
+
+  /**
+   * Flag indicating if a merge request should remove the source branch when merging.
+   */
+  remove_source_branch?: boolean;
+
+  /**
+   * The ID of the users added as a reviewer to the merge request. If set to 0 or left empty, no reviewers are added.
+   */
+  reviewer_ids?: number[];
+
+  /**
+   * Indicates if the merge request is set to be squashed when merged. Project settings might override this value.
+   */
+  squash?: boolean;
+
+  /**
+   * Numeric ID of the target project.
+   */
+  target_project_id?: number;
+}

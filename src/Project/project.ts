@@ -13,7 +13,7 @@ import { PipelineInfo, PipelineSearchOptions } from "../Pipeline";
 import { Pipeline } from "../Pipeline/pipeline";
 import { GitlabOptions } from "../Gitlab";
 import { decodeBase64 } from "../utils/base64";
-import { IssueInfo, IssueSearchOptions } from "../Issue";
+import { IssueCreateOptions, IssueInfo, IssueSearchOptions } from "../Issue";
 
 export interface Project extends ProjectInfo {}
 
@@ -60,7 +60,9 @@ export class Project extends GitlabApiClientBase {
       expectedStatusCode: 200,
       params: searchOptions,
     });
-    return data.map((commit: CommitInfo) => new Commit(commit, this.options));
+    return data.map(
+      (commit: CommitInfo) => new Commit(commit, this.options, this.id)
+    );
   }
 
   async findPipelines(
@@ -100,5 +102,50 @@ export class Project extends GitlabApiClientBase {
       this.id,
       ref
     );
+  }
+
+  async createBranch(branchName: string, sourceBranchName: string) {
+    const { data } = await this.CallGitlabApi({
+      endpoint: `/projects/${this.id}/repository/branches?branch=${branchName}&ref=${sourceBranchName}`,
+      method: Methods.POST,
+      expectedStatusCode: 201,
+    });
+    return new Branch(data, this.options, this.id);
+  }
+
+  async createIssue(issue?: IssueCreateOptions) {
+    const { data } = await this.CallGitlabApi({
+      endpoint: `/projects/${this.id}/issues`,
+      method: Methods.POST,
+      expectedStatusCode: 201,
+      data: issue,
+    });
+    return new Issue(data, this.options);
+  }
+
+  async archive() {
+    const { data } = await this.CallGitlabApi({
+      endpoint: `/projects/${this.id}/archive`,
+      method: Methods.POST,
+      expectedStatusCode: 201,
+    });
+    Object.assign(this, data);
+  }
+
+  async unArchive() {
+    const { data } = await this.CallGitlabApi({
+      endpoint: `/projects/${this.id}/unarchive`,
+      method: Methods.POST,
+      expectedStatusCode: 201,
+    });
+    Object.assign(this, data);
+  }
+
+  async delete() {
+    await this.CallGitlabApi({
+      endpoint: `/projects/${this.id}`,
+      method: Methods.DELETE,
+      expectedStatusCode: 202,
+    });
   }
 }

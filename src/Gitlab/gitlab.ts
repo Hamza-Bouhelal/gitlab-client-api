@@ -8,7 +8,7 @@ import {
   ProjectSearchOptions,
 } from "../Project";
 import { Group } from "../Group/group";
-import { GroupInfo, GroupSeatchOptions } from "../Group";
+import { GroupCreateOptions, GroupInfo, GroupSeatchOptions } from "../Group";
 import { GitlabOptions } from ".";
 import { RestrictedUser } from "../User/user";
 import { RestrictedUserInfo, UserSearchOptions } from "../User";
@@ -77,7 +77,9 @@ export class Gitlab extends GitlabApiClientBase {
     );
   }
 
-  createProject = async (projectOptions: GitlabCreateProjectOptions) => {
+  async createProject(
+    projectOptions: GitlabCreateProjectOptions
+  ): Promise<Project> {
     const { data } = await this.CallGitlabApi({
       endpoint: "/projects",
       method: Methods.POST,
@@ -85,5 +87,15 @@ export class Gitlab extends GitlabApiClientBase {
       params: projectOptions,
     });
     return new Project(data, this.options);
-  };
+  }
+
+  async createGroup(groupName: GroupCreateOptions): Promise<Group> {
+    const { data } = await this.CallGitlabApi({
+      endpoint: "/groups",
+      method: Methods.POST,
+      expectedStatusCode: 201,
+      params: groupName,
+    });
+    return new Group(data, this.options);
+  }
 }

@@ -11,7 +11,7 @@ export class RestrictedUser {
 export interface User extends UserInfo {}
 
 export class User extends RestrictedUser {
-  constructor(userInfo: RestrictedUserInfo) {
+  constructor(userInfo: UserInfo) {
     super(userInfo);
   }
 }
